@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/owenrumney/go-lsp/servertest"
-	"github.com/wolfmanjm/wjm_forth_lpc/forth_lsp"
+	"github.com/wolfmanjm/wjm_forth_lsp/forth_lsp"
 )
 
 func TestInitialize(t *testing.T) {

@@ -1,4 +1,4 @@
-module github.com/wolfmanjm/wjm_forth_lpc
+module github.com/wolfmanjm/wjm_forth_lsp
 
 go 1.27.1
 

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/owenrumney/go-lsp/server"
-	lsp "github.com/wolfmanjm/wjm_forth_lpc/forth_lsp"
+	lsp "github.com/wolfmanjm/wjm_forth_lsp/forth_lsp"
 )
 
 func main() {
