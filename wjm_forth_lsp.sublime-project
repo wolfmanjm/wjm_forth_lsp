@@ -1,0 +1,22 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+		}
+	],
+	"settings":
+	{
+		"LSP":
+		{
+			"LSP-gopls":
+			{
+				"enabled": true,
+			},
+			"goforth":
+			{
+				"enabled": true
+			},
+		},
+	},
+}
