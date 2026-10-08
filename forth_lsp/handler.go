@@ -76,17 +76,3 @@ func (h *Handler) DidSave(ctx context.Context, params *lsp.DidSaveTextDocumentPa
 		Diagnostics: diags,
 	})
 }
-
-func (h *Handler) Hover(_ context.Context, _ *lsp.HoverParams) (*lsp.Hover, error) {
-	return &lsp.Hover{
-		Contents: lsp.NewHoverContents(lsp.Markdown, "**mylang** hover"),
-	}, nil
-}
-
-func (h *Handler) Completion(_ context.Context, _ *lsp.CompletionParams) (*lsp.CompletionList, error) {
-	return &lsp.CompletionList{
-		Items: []lsp.CompletionItem{
-			{Label: "example"},
-		},
-	}, nil
-}

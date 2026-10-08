@@ -15,7 +15,7 @@
 			},
 			"goforth":
 			{
-				"enabled": true
+				"enabled": true,
 			},
 		},
 	},
