@@ -5,7 +5,6 @@ import (
 	"embed"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/owenrumney/go-lsp/lsp"
@@ -58,28 +57,27 @@ func CloseDatabase() {
 
 func (h *Handler) Hover(_ context.Context, params *lsp.HoverParams) (*lsp.Hover, error) {
 
-	fmt.Fprintln(os.Stderr, params)
+	// fmt.Fprintln(os.Stderr, params)
 
 	line:= params.Position.Line
 	pos := params.Position.Character
 
 	text, ok := h.documents.Text(params.TextDocument.URI)
 	if ok {
-		line := strings.Split(text, "\n")[line]
-		w := WordAtPoint(line, pos)
+		l := strings.Split(text, "\n")[line]
+		w := WordAtPoint(l, pos)
 		if w == "" { return nil, nil }
-
+		w = strings.ToLower(w)
 		// log.Println("look up word: ", w)
 
 		var (
-			id int
 			word string
 			stack string
 			description string
 			example string
 		)
-	    row := DB.QueryRow("SELECT id, word, stack, description, example from FORTH WHERE word = ?", w)
-	    err := row.Scan(&id, &word, &stack, &description, &example);
+	    row := DB.QueryRow("SELECT word, stack, description, example from FORTH WHERE word = ?", w)
+	    err := row.Scan(&word, &stack, &description, &example);
 	    if err == nil {
     		// log.Printf("DB result: %s, %s, %s\n", word, stack, description)
 			r := fmt.Sprintf("*%s*  `%s`  \n%s  \n", word, stack, description)

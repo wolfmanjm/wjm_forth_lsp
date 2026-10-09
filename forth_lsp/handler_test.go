@@ -31,10 +31,11 @@ func TestHover(t *testing.T) {
 	if hover == nil {
 		t.Fatal("expected hover result")
 	}
-	fmt.Fprintln(os.Stderr, hover.Contents.Markup.Value)
-	// if hover.Contents.Markup.Value != "**mylang** hover: there" {
-	// 	t.Error("expected hover not found")
-	// }
+
+	if hover.Contents.Markup.Value != "*ud/mod*  `( ud1 ud2 -- ud3 ud4 )`  \n64/64 = 64 rem 64 Division  \n"  {
+		fmt.Fprintln(os.Stderr, hover.Contents.Markup.Value)
+		t.Error("expected hover not found")
+	}
 
 	hover, err = h.Hover("file:///test.txt", 0, 3)
 	if err != nil {
@@ -49,14 +50,26 @@ func TestHover(t *testing.T) {
 func TestCompletion(t *testing.T) {
 	h := servertest.New(t, forth_lsp.New())
 
-	h.DidOpen("file:///test.txt", "mylang", "hello")
+	h.DidOpen("file:///test.txt", "mylang", "du")
 
-	result, err := h.Completion("file:///test.txt", 0, 5)
+	result, err := h.Completion("file:///test.txt", 0, 2)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(result.Items) == 0 {
-		t.Error("expected at least one completion item")
+	if len(result.Items) != 4 {
+		t.Error("expected 4 completion items, got: ", len(result.Items))
+	}
+
+	expected := []string {
+		"du<",
+		"du>",
+		"dump",
+		"dup",
+	}
+	for i, v := range result.Items {
+		if v.Label != expected[i] {
+			t.Error("expected: ", expected[i], " got: ", v.Label)
+		}
 	}
 }
 
