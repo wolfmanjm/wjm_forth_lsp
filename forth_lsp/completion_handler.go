@@ -19,6 +19,9 @@ func (h *Handler) Completion(_ context.Context, params *lsp.CompletionParams) (*
 		var w string
 		if pos > 0 {
 			w = WordAtPoint(l, pos-1)
+			w = strings.ToLower(w)
+			w = EscapePrefix(w)
+
 		} else {
 			w = ""
 		}
@@ -39,7 +42,7 @@ func (h *Handler) Completion(_ context.Context, params *lsp.CompletionParams) (*
 			rows, err = DB.Query("SELECT word, stack, description, example from FORTH ORDER BY word")
 		} else {
 			q := strings.ToLower(w) + "%"
-			rows, err = DB.Query("SELECT word, stack, description, example from FORTH WHERE word LIKE ? ORDER BY word", q)
+			rows, err = DB.Query("SELECT word, stack, description, example from FORTH WHERE word LIKE ? ESCAPE '\\' ORDER BY word", q)
 		}
 		if err != nil {
 			log.Printf("DB Query Error result: %v\n", err)

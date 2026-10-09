@@ -22,14 +22,14 @@ func TestInitialize(t *testing.T) {
 func TestHover(t *testing.T) {
 	h := servertest.New(t, forth_lsp.New())
 
-	h.DidOpen("file:///test.txt", "mylang", "fred\nud/mod\n")
+	h.DidOpen("file:///test.txt", "mylang", "fred\nud/mod\n[char]\nbuffer:\n")
 
 	hover, err := h.Hover("file:///test.txt", 1, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if hover == nil {
-		t.Fatal("expected hover result")
+		t.Fatal("expected a hover result, got none")
 	}
 
 	if hover.Contents.Markup.Value != "*ud/mod*  `( ud1 ud2 -- ud3 ud4 )`  \n64/64 = 64 rem 64 Division  \n"  {
@@ -44,6 +44,22 @@ func TestHover(t *testing.T) {
 	if hover != nil {
 		fmt.Fprintln(os.Stderr, hover.Contents.Markup.Value)
 		t.Fatal("did not expect hover result")
+	}
+
+	hover, err = h.Hover("file:///test.txt", 2, 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hover == nil {
+		t.Error("expected hover, got none")
+	}
+
+	hover, err = h.Hover("file:///test.txt", 3, 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hover == nil {
+		t.Error("expected hover, got none")
 	}
 }
 

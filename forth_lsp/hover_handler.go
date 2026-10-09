@@ -55,6 +55,13 @@ func CloseDatabase() {
 	DB = nil
 }
 
+func EscapePrefix(p string) string {
+    p = strings.ReplaceAll(p, "\\", "\\\\")
+    p = strings.ReplaceAll(p, "%", "\\%")
+    p = strings.ReplaceAll(p, "_", "\\_")
+    return p
+}
+
 func (h *Handler) Hover(_ context.Context, params *lsp.HoverParams) (*lsp.Hover, error) {
 
 	// fmt.Fprintln(os.Stderr, params)
@@ -68,6 +75,7 @@ func (h *Handler) Hover(_ context.Context, params *lsp.HoverParams) (*lsp.Hover,
 		w := WordAtPoint(l, pos)
 		if w == "" { return nil, nil }
 		w = strings.ToLower(w)
+		w = EscapePrefix(w)
 		// log.Println("look up word: ", w)
 
 		var (
@@ -76,7 +84,7 @@ func (h *Handler) Hover(_ context.Context, params *lsp.HoverParams) (*lsp.Hover,
 			description string
 			example string
 		)
-	    row := DB.QueryRow("SELECT word, stack, description, example from FORTH WHERE word = ?", w)
+	    row := DB.QueryRow("SELECT word, stack, description, example from FORTH WHERE word LIKE ? ESCAPE '\\'", w)
 	    err := row.Scan(&word, &stack, &description, &example);
 	    if err == nil {
     		// log.Printf("DB result: %s, %s, %s\n", word, stack, description)
