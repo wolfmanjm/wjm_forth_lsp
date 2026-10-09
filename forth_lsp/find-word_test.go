@@ -56,7 +56,7 @@ func TestWord(t *testing.T) {
 }
 
 func TestTableDriven(t *testing.T) {
-	str := "This is a line of text"
+	str := "This is a line of (blah) text"
     // Define the test cases
     tests := []struct {
         name string
@@ -67,8 +67,9 @@ func TestTableDriven(t *testing.T) {
         {"pos 6", 6, "is"},
         {"pos 7", 7, ""},
         {"pos 8", 8, "a"},
-        {"pos 21", 21, "text"},
-        {"pos 22", 22, ""},
+        {"pos 20", 20, "(blah)"},
+        {"pos 21", 28, "text"},
+        {"pos 22", 29, ""},
     }
 
     // Iterate and run each case as a subtest

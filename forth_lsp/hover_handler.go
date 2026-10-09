@@ -25,7 +25,7 @@ func OpenDatabase() (error) {
 	// Register the embed.FS to create a new Virtual File System
 	vfsName, _, err := vfs.New(embeddedFS)
 	if err != nil {
-		log.Fatalf("Failed to initialize VFS: %v", err)
+		return fmt.Errorf("Failed to initialize VFS: %v", err)
 	}
 
 	// Connect to the file inside the VFS by appending '?vfs=' to the DSN
@@ -82,7 +82,7 @@ func (h *Handler) Hover(_ context.Context, params *lsp.HoverParams) (*lsp.Hover,
 	    err := row.Scan(&id, &word, &stack, &description, &example);
 	    if err == nil {
     		// log.Printf("DB result: %s, %s, %s\n", word, stack, description)
-			r := fmt.Sprintf("*%s*  \n**stack**: %s  \n%s  \n", word, stack, description)
+			r := fmt.Sprintf("*%s*  `%s`  \n%s  \n", word, stack, description)
 
 			return &lsp.Hover{
 				Contents: lsp.NewHoverContents(lsp.Markdown, r),

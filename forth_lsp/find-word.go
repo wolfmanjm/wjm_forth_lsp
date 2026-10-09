@@ -1,7 +1,6 @@
 package forth_lsp
 
 import (
-	"strings"
 	"unicode"
 )
 
@@ -22,7 +21,7 @@ func WordAtPoint(line string, point int) string {
 	for start > 0 {
 		// Read previous character byte (assumes ASCII/UTF-8 single byte logic for simplicity)
 		// For true Unicode support, iterate using a rune scanner or strings.LastIndexFunc
-		if unicode.IsSpace(rune(line[start-1])) || strings.ContainsRune(".,;:!?()[]{}", rune(line[start-1])) {
+		if unicode.IsSpace(rune(line[start-1])) /* || strings.ContainsRune(".,;:!?()[]{}", rune(line[start-1]))*/ {
 			break
 		}
 		start--
@@ -31,7 +30,7 @@ func WordAtPoint(line string, point int) string {
 	// Find the end boundary of the word
 	end := point
 	for end < len(line) {
-		if unicode.IsSpace(rune(line[end])) || strings.ContainsRune(".,;:!?()[]{}", rune(line[end])) {
+		if unicode.IsSpace(rune(line[end])) /*|| strings.ContainsRune(".,;:!?()[]{}", rune(line[end]))*/ {
 			break
 		}
 		end++

@@ -30,7 +30,7 @@ func (h *Handler) SetClient(client *server.Client) {
 func (h *Handler) Initialize(_ context.Context, _ *lsp.InitializeParams) (*lsp.InitializeResult, error) {
 	err := OpenDatabase()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Database failed: %v", err)
 	}
 	return &lsp.InitializeResult{
 		ServerInfo: &lsp.ServerInfo{Name: "mylang", Version: "0.1.0"},
