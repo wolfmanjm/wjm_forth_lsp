@@ -3,7 +3,10 @@
 	[
 		{
 			"path": ".",
-		}
+		},
+		{
+			"path": "/home/morris/Stuff/golang/github.com/wolfmanjm",
+		},
 	],
 	"settings":
 	{

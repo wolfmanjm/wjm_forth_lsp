@@ -2,7 +2,9 @@ package forth_lsp
 
 import (
 	"context"
+	"log"
 	"strings"
+
 	"github.com/owenrumney/go-lsp/document"
 	"github.com/owenrumney/go-lsp/lsp"
 	"github.com/owenrumney/go-lsp/server"
@@ -26,12 +28,19 @@ func (h *Handler) SetClient(client *server.Client) {
 }
 
 func (h *Handler) Initialize(_ context.Context, _ *lsp.InitializeParams) (*lsp.InitializeResult, error) {
+	err := OpenDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
 	return &lsp.InitializeResult{
 		ServerInfo: &lsp.ServerInfo{Name: "mylang", Version: "0.1.0"},
 	}, nil
 }
 
-func (h *Handler) Shutdown(_ context.Context) error { return nil }
+func (h *Handler) Shutdown(_ context.Context) error {
+	CloseDatabase()
+	return nil
+}
 
 func (h *Handler) DidOpen(_ context.Context, params *lsp.DidOpenTextDocumentParams) error {
 	_, err := h.documents.Open(params)
@@ -54,7 +63,7 @@ func (h *Handler) DidSave(ctx context.Context, params *lsp.DidSaveTextDocumentPa
 	text, ok := h.documents.Text(params.TextDocument.URI)
 	if ok {
 		for i, line := range strings.Split(text, "\n") {
-			idx := strings.Index(line, "TODO")
+			idx := strings.Index(line, "\\ TODO")
 			if idx < 0 {
 				continue
 			}
@@ -65,7 +74,7 @@ func (h *Handler) DidSave(ctx context.Context, params *lsp.DidSaveTextDocumentPa
 					End:   lsp.Position{Line: i, Character: idx + 4},
 				},
 				Severity: &sev,
-				Source:   "mylang",
+				Source:   "forth",
 				Message:  "TODO found",
 			})
 		}

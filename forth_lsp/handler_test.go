@@ -2,6 +2,8 @@ package forth_lsp_test
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -20,14 +22,27 @@ func TestInitialize(t *testing.T) {
 func TestHover(t *testing.T) {
 	h := servertest.New(t, forth_lsp.New())
 
-	h.DidOpen("file:///test.txt", "mylang", "hello world")
+	h.DidOpen("file:///test.txt", "mylang", "fred\nud/mod\n")
 
-	hover, err := h.Hover("file:///test.txt", 0, 0)
+	hover, err := h.Hover("file:///test.txt", 1, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if hover == nil {
 		t.Fatal("expected hover result")
+	}
+	fmt.Fprintln(os.Stderr, hover.Contents.Markup.Value)
+	// if hover.Contents.Markup.Value != "**mylang** hover: there" {
+	// 	t.Error("expected hover not found")
+	// }
+
+	hover, err = h.Hover("file:///test.txt", 0, 3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hover != nil {
+		fmt.Fprintln(os.Stderr, hover.Contents.Markup.Value)
+		t.Fatal("did not expect hover result")
 	}
 }
 
@@ -48,7 +63,7 @@ func TestCompletion(t *testing.T) {
 func TestDiagnostics(t *testing.T) {
 	h := servertest.New(t, forth_lsp.New())
 
-	h.DidOpen("file:///test.txt", "mylang", "TODO fix this")
+	h.DidOpen("file:///test.txt", "mylang", "\\ TODO fix this")
 	h.DidSave("file:///test.txt")
 
 	ctx, cancel := context.WithTimeout(t.Context(), 2*time.Second)
