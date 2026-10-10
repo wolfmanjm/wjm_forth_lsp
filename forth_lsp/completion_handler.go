@@ -65,10 +65,12 @@ func (h *Handler) Completion(_ context.Context, params *lsp.CompletionParams) (*
 		}
 
 		var cil []lsp.CompletionItem
+		kind := lsp.CompletionItemKindFunction
 		for _, v := range results {
 			ci := lsp.CompletionItem{
 				Label: v.word,
 				Detail: v.stack,
+				Kind: &kind,
 			}
 			cil = append(cil, ci)
 		}
