@@ -5,6 +5,7 @@ Whats coming...
 
 * Adding Hover and completion for user defined words in the current file
 * Builds for Linux and other platforms
+* Documentation generator - reads a forth source file and generates a list of words and stack effects
 
 To install you would add it to your editors LSP servers.
 

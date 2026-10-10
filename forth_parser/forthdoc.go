@@ -20,7 +20,7 @@
 // USER MARKER VOCABULARY SYNONYM.  Colon definitions that use CREATE are
 // detected as user-defined defining words, so later uses such as
 // "10 const ten" are found too.  More can be added with -defining.
-package main
+package forthdoc
 
 import (
 	"encoding/json"
@@ -453,12 +453,36 @@ func printText(out io.Writer, file string, words []*Word) {
 
 // ----------------------------------------------------------------- main ---
 
+type ForthDefs struct {
+	Name      string `json:"name"`
+	Kind      string `json:"kind"`
+	Line      int    `json:"line"`
+	Stack     string `json:"stack,omitempty"`
+	Doc       string `json:"doc,omitempty"`
+}
+
+func ExtractForth(src string) []ForthDefs {
+	r := parse(src, false, nil)
+	var fd []ForthDefs
+	for _, v := range r {
+		var f ForthDefs
+		f.Name = v.Name
+		f.Kind = v.Kind
+		f.Line = v.Line
+		f.Stack = v.Stack
+		f.Doc = v.Doc
+		fd = append(fd, f)
+	}
+
+	return fd
+}
+
 type fileResult struct {
 	File  string  `json:"file"`
 	Words []*Word `json:"words"`
 }
 
-func main() {
+func GenerateDocs() {
 	format := flag.String("format", "md", "output format: md, text or json")
 	loose := flag.Bool("loose", false, "allow blank lines between a comment block and its definition")
 	extra := flag.String("defining", "", "comma-separated extra defining words (e.g. \"enum,field:\")")
